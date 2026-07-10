@@ -1,0 +1,46 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    behaviors {
+        view_dance: tap_dance_views {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_VIEWS";
+            #binding-cells = <0>;
+            tapping-term-ms = <250>; 
+            bindings 
+                = <&kp LC(N1)>  // 1 Tap   ➔ Front View (Ctrl+1)
+                , <&kp LC(N5)>  // 2 Taps  ➔ Top View   (Ctrl+5)
+                , <&kp LC(N4)>; // 3 Taps  ➔ Right View (Ctrl+4)
+        };
+
+        view_hold: view_hold_isometric {
+            compatible = "zmk,behavior-hold-tap";
+            label = "VIEW_HOLD_ISOMETRIC";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <300>; 
+            bindings = <&kp>, <&view_dance>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+                &kp ESC      &kp LSHIFT   &kp LCTRL     
+                &kp A        &kp D        &kp I         
+                &kp ENTER    &mo 1        &view_hold LC(N7) 0 
+            >;               
+        };
+
+        history_scrub_layer {
+            bindings = <
+                &trans       &trans       &trans
+                &trans       &trans       &trans
+                &trans       &trans       &trans
+            >;
+        };
+    };
+};
