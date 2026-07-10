@@ -27,6 +27,8 @@
     keymap {
         compatible = "zmk,keymap";
 
+        position-transform = <&default_transform>;
+
         default_layer {
             bindings = <
                 &kp ESC      &kp LSHIFT   &kp LCTRL     
