@@ -1,46 +1,33 @@
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
-
 / {
-    behaviors {
-        view_dance: tap_dance_views {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TAP_DANCE_VIEWS";
-            #binding-cells = <0>;
-            tapping-term-ms = <250>; 
-            bindings 
-                = <&kp LC(N1)>  // 1 Tap   ➔ Front View (Ctrl+1)
-                , <&kp LC(N5)>  // 2 Taps  ➔ Top View   (Ctrl+5)
-                , <&kp LC(N4)>; // 3 Taps  ➔ Right View (Ctrl+4)
-        };
-
-        view_hold: view_hold_isometric {
-            compatible = "zmk,behavior-hold-tap";
-            label = "VIEW_HOLD_ISOMETRIC";
-            #binding-cells = <2>;
-            flavor = "tap-preferred";
-            tapping-term-ms = <300>; 
-            bindings = <&kp>, <&view_dance>;
-        };
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,matrix-transform = &default_transform;
     };
 
-    keymap {
-        compatible = "zmk,keymap";
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        columns = <9>; // Number of direct pins total
+        rows = <1>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+            RC(0,3) RC(0,4) RC(0,5)
+            RC(0,6) RC(0,7) RC(0,8)
+        >;
+    };
 
-        default_layer {
-            bindings = <
-                &kp ESC      &kp LSHIFT   &kp LCTRL     
-                &kp A        &kp D        &kp I         
-                &kp ENTER    &mo 1        &view_hold LC(N7) 0 
-            >;               
-        };
-
-        history_scrub_layer {
-            bindings = <
-                &trans       &trans       &trans
-                &trans       &trans       &trans
-                &trans       &trans       &trans
-            >;
-        };
+    kscan0: kscan_direct {
+        compatible = "zmk,kscan-gpio-direct";
+        label = "KSCAN_DIRECT";
+        input-gpios
+            = <&gpio0 6  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 1  ➔ Key 1 (Esc)
+            , <&gpio0 8  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 2  ➔ Key 2 (Shift)
+            , <&gpio0 17 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 7  ➔ Key 3 (Ctrl)
+            , <&gpio0 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 8  ➔ Key 4 (Macro: a)
+            , <&gpio0 22 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 9  ➔ Key 5 (Macro: d)
+            , <&gpio0 24 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 10 ➔ Key 6 (Macro: i)
+            , <&gpio1 0  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 11 ➔ Key 7 (Macro: Spare)
+            , <&gpio1 4  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 17 ➔ Key 8 (Thumb: Rotation Lock)
+            , <&gpio1 6  (GPIO_ACTIVE_LOW | GPIO_PULL_UP)> // Pin 18 ➔ Key 9 (Thumb: View-Dance Switch)
+            ;
     };
 };
